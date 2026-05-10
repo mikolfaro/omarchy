@@ -2,6 +2,7 @@
 
 # omarchy:summary=Returns a formatted battery status string with percentage and power draw/charge.
 
+BAT="${1-BAT}"
 battery_info=$(upower -i $(upower -e | grep BAT))
 
 percentage=$(echo "$battery_info" | awk '/percentage/ {
@@ -17,8 +18,8 @@ power_rate=$(echo "$battery_info" | awk '/energy-rate/ {
 }')
 
 state=$(echo "$battery_info" | awk '/state/ { print $2; exit }')
-time_remaining=$(omarchy-battery-remaining-time)
-capacity=$(omarchy-battery-capacity)
+time_remaining=$(omarchy-battery-remaining-time $BAT)
+capacity=$(omarchy-battery-capacity $BAT)
 
 if [[ $state == "charging" ]]; then
     echo "󰁹    Battery ${percentage}%  ·  ${time_remaining} to full  ·   ${power_rate}W / ${capacity}Wh"
